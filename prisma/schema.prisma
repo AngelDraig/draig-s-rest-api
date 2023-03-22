@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(cuid())
+  first_name  String
+  last_name   String
+  middle_name String?
+  role        RoleEnumType    @default(user)
+  password    String
+  email       String   @unique
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  Comment     Comment[]
+  emailVerified DateTime?
+  image         String?
+  tokens      String[]
+
+  @@map("users")
+}
+
+enum RoleEnumType {
+  user
+  admin
+}
+
+model NewsCategories {
+  id        String   @unique @default(cuid())
+  name      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  news      News[]
+
+  @@map("news_categories")
+}
+
+model News {
+  id                Int            @unique @default(autoincrement())
+  slug              String         @unique @db.VarChar(255)
+  title             String         @db.VarChar(255)
+  description       String?
+  seo_title         String         @db.VarChar(255)
+  seo_description   String         @db.Char(600)
+  views             Int
+  short_description String         @db.VarChar(255)
+  categoryId        String         @map("category_id")
+  rating            Int            @db.SmallInt
+  createdAt         DateTime       @default(now()) @map("created_at")
+  updatedAt         DateTime       @updatedAt @map("updated_at")
+  Comment           Comment[]
+  category          NewsCategories @relation(fields: [categoryId], references: [id])
+
+  @@map("news")
+}
+
+model Comment {
+  id        Int    @unique @default(autoincrement())
+  comment   String
+  author_id String
+  news_id   Int
+  users     User   @relation(fields: [author_id], references: [id])
+  news      News   @relation(fields: [news_id], references: [id])
+}
