@@ -1,3 +1,4 @@
 export const usersRoutes = {
-    getUsers: "/users",
+    getUsers: "/",
+    createUsers: "/create",
 }
