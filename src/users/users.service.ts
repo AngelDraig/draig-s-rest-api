@@ -5,6 +5,8 @@ import { PrismaService } from 'prisma/prisma.service';
 import { User } from '@prisma/client';
 import { userCreateDto } from './dto/user-create.dto';
 
+import { JwtVerifyInt } from 'src/settings/interface';
+
 @Injectable()
 export class UsersService {
 
@@ -39,8 +41,17 @@ export class UsersService {
 
 	}
 
-	async getMe(): Promise<User | null>{
-		return 
+	async getMe(request: JwtVerifyInt): Promise<User | null>{
+		try {
+			return this.prisma.user.findUnique({
+				where: {
+					id: request.user.id
+				}
+			});
+		}
+		catch (error) {
+			throw new BadRequestException({description: "Error"});
+		}
 	}
 	
 	async getUsers(): Promise<User[] | null> {

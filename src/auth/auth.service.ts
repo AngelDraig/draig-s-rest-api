@@ -17,7 +17,7 @@ export class AuthService {
 	async createTokens(
 		signInDto: signInDto,
 		response: Response
-	): Promise<{ auth_token: string; refresh_token: string } | Error> {
+	): Promise<{ access_token: string; refresh_token: string } | Error> {
 		const user = await this.PrismaService.user.findUnique({
 			where: {
 				email: signInDto.email,
@@ -45,10 +45,11 @@ export class AuthService {
 				maxAge: 24 * 60 * 60 * 1000 * 30,
 			});
 			return {
-				auth_token: accessToken,
+				access_token: accessToken,
 				refresh_token: refreshToken,
 			};
-		} else {
+		}
+		else {
 			throw new UnauthorizedException('Error!', {
 				description: 'Unauthorized!',
 			});
