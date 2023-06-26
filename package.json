@@ -27,6 +27,7 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.3",
     "@nestjs/platform-express": "^9.0.0",
+    "@nestjs/serve-static": "^3.0.1",
     "@nestjs/throttler": "^4.0.0",
     "@prisma/client": "^4.11.0",
     "adminjs": "^6.8.7",
